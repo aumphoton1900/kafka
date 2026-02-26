@@ -1,3 +1,4 @@
+1.https://www.baeldung.com/spring-retry-kafka-consumer
 4.1. Error Handler
 Let’s define two properties on the Kafka configuration class:
 
