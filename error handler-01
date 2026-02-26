@@ -3,7 +3,6 @@ Let’s define two properties on the Kafka configuration class:
 
 @Value(value = "${kafka.backoff.interval}")
 private Long interval;
-
 @Value(value = "${kafka.backoff.max_failure}")
 private Long maxAttempts;
 Copy
@@ -25,7 +24,23 @@ maxAttempts: the maximum number of times to retry the operation before giving up
 In this strategy, the consumer waits a fixed time before retrying the message consumption.
 
 The DefaultErrorHandler is being initialized with a lambda function representing the logic to execute when all the retry attempts are exhausted.
-
 The lambda function takes two arguments:
+
+
+@Component
+@KafkaListener(id = "multiGroup", topics = "greeting")
+public class MultiTypeKafkaListener {
+
+    @KafkaHandler
+    @RetryableTopic(
+      backoff = @Backoff(value = 3000L), 
+      attempts = "5", 
+      autoCreateTopics = "false",
+      include = SocketTimeoutException.class, exclude = NullPointerException.class)
+    public void handleGreeting(Greeting greeting) {
+        System.out.println("Greeting received: " + greeting);
+    }
+}
+
 
 
